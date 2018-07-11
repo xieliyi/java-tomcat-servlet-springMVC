@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"    
+    xmlns:tx="http://www.springframework.org/schema/tx"    
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.1.xsd
+    http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+    http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd">
+
+    <!-- 引入注解 -->
+    <!-- 会自动注册RequestMappingHandlerMapping与RequestMappingHandlerAdapter两个Bean,
+        这是Spring MVC为@Controller分发请求所必需的，并且提供了数据绑定支持，
+    @NumberFormatannotation支持，@DateTimeFormat支持,@Valid支持读写XML的支持（JAXB）和读写JSON的支持（默认Jackson）等功能。-->
+    <mvc:annotation-driven />
+
+    <!-- 配置自动扫描的包 -->
+    <context:component-scan base-package="controller" />
+    
+    <!-- 视图解析器 -->
+    <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+    	<!-- 设置为true以忽略对Accept Header的支持 （默认为false）-->
+    	<property name="ignoreAcceptHeader" value="true"/>
+    	<!-- true，开启扩展名支持，false关闭支持 -->  
+    	<property name="favorPathExtension" value="true" /> 
+    	<!-- 用于开启 http://www.sxrczx.com/rest?format=json 的支持 (默认为false)-->
+  		<property name="favorParameter" value="true"/>
+    	<!-- 在没有扩展名时即: "http://www.sxrczx.com/rest" 时的默认展现形式 -->
+    	<property name="defaultContentType" value="text/html"/>
+    	<!-- 扩展名至mimeType的映射,即 http://www.sxrczx.com/rest.json 映射为 application/json -->
+    	<property name="mediaTypes">  
+			<map>
+				<entry key="json" value="application/json"/>
+				<entry key="xml"  value="application/xml" />
+				<entry key="html" value="text/html"/>
+		    </map>  
+  		</property>
+  		<property name="viewResolvers">    
+	        <list>
+	            <!-- for text/html 解析为实际的物理视图 -->
+			    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" >
+			    	<property name="prefix" value="/WEB-INF/jsp/"/>
+			    	<property name="suffix" value=".jsp"/>
+			    </bean>
+	        </list>
+        </property>  
+  		<property name="defaultViews">
+	  		<list>
+	  			<!-- for application/json -->
+	  			<bean class="org.springframework.web.servlet.view.json.MappingJacksonJsonView"/> 
+	  		</list>
+  		</property>
+    </bean>
+
+    
+</beans>
+
+
+
+
+
+
+
